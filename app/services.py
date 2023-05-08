@@ -1,5 +1,6 @@
 import requests as r
 from random import randint
+import re
 
 # def rand_sw_char():
 #     return randint(1, 83)
@@ -20,6 +21,23 @@ def first_name(st):
         else:
             break
     return fn.title()
+
+def strip_escape_chars(st):
+    st = repr(st)
+    l = 0
+    newst = ''
+    while l < len(st):
+        if st[l] == '\\' and st[l+1] == 'x' and st[l+2] == '0':
+            l += 4
+            newst += ' '
+        elif st[l] == '\\':
+            l += 2
+            newst += ' '
+        else:
+            newst += st[l]
+            l += 1
+    return newst
+
 
 def get_sw_char(id):
     if id == 0:
@@ -56,15 +74,25 @@ def get_poke_char(id):
         id = randint(1, 999)
     res = r.get(f'https://pokeapi.co/api/v2/pokemon/{id}')
     data = res.json()
-    print(data)
+    char = {}
+    char['id'] = id
+    char['uni'] = 'Pokemon'
+    char['first_name'] = data['name'].title()
+    char['full_name'] = data['name'].title()
+    if data['sprites']['other']['dream_world']:
+        char['img'] = data['sprites']['other']['dream_world']['front_default']
+    elif data['sprites']['other']['official-artwork']:
+        char['img'] = data['sprites']['other']['dream_world']['official-artwork']
+    else:
+        char['img'] = data['sprites']['front_shiny']
+    res2 = r.get(f'https://pokeapi.co/api/v2/pokemon-species/{id}')
+    d2 = res2.json()
+    des = strip_escape_chars(d2['flavor_text_entries'][0]['flavor_text'])
+    char['desc'] = f"{data['name'].title()}- {des}."
+    print(char)
+    
 
 # NEW ADDS
-def get_dis_char(id):
-    if id == 0:
-        id = randint(1, 83)
-    res = r.get(f'https://api.disneyapi.dev/character/{id}')
-    data = res.json()
-    print(data)
 
 def get_dis_char(id):
     if id == 0:

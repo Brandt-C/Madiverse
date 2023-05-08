@@ -27,7 +27,7 @@ def test():
 
 @app.route('/testing')
 def test2():
-    print('GOT Char')
-    get_dis_char(0)
+    print(' Char')
+    get_poke_char(0)
     print('\n')
     return render_template('land.html')
