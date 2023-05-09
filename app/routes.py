@@ -16,7 +16,7 @@ def test():
     print('\n')
     get_sw_loc(0)
     print('\n')
-    get_rm_loc(0)
+    # get_rm_loc(0)
     print('\n')
     print('DISNEY Char')
     get_dis_char(0)
@@ -28,6 +28,6 @@ def test():
 @app.route('/testing')
 def test2():
     print(' Char')
-    get_poke_char(0)
+    get_sw_loc(0)
     print('\n')
     return render_template('land.html')
