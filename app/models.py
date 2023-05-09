@@ -42,3 +42,31 @@ class Character(db.Model):
             'img' : self.img,
             'uni' : self.uni
         }
+    
+class Location(db.Model):
+    id = db.Column(db.String, primary_key=True)
+    uni = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    desc = db.Column(db.String, nullable=False)
+    residents = db.Column(db.String, nullable=False)
+
+    def __init__(self, id, uni, name, desc, residents):
+        self.id = id,
+        self.uni = uni,
+        self.name = name,
+        self.desc = desc,
+        self.residents = residents
+    
+    def saveLoc(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def to_dict(self):
+        return {
+            'id' : self.id,
+            'uni' : self.uni,
+            'name' : self.name,
+            'desc' : self.desc,
+            'residents' : self.residents
+        }
+    

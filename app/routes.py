@@ -27,7 +27,5 @@ def test():
 
 @app.route('/testing')
 def test2():
-    print(' Char')
-    get_got_char(0)
-    print('\n')
+    get_sw_loc(0)
     return render_template('land.html')

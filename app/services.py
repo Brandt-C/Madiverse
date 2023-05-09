@@ -1,18 +1,6 @@
 import requests as r
 from random import randint
-from .models import Character
-
-
-# def rand_sw_char():
-#     return randint(1, 83)
-# def rand_poke_char():
-#     return randint(1, 999)
-# def rand_rm_char():
-#     return randint(1, 827)
-# def rand_sw_loc():
-#     return randint(1, 67)
-# def rand_rm_loc():
-#     return randint(1, 127)
+from .models import Character, Location
 
 def first_name(st):
     fn = ''
@@ -43,10 +31,8 @@ def strip_escape_chars(st):
 def get_sw_char(id):
     if id == 0:
         id = randint(1, 83)
-    print(f'SW Char--{id}')
     sw_char = Character.query.get(f"sw{id}")
     if sw_char:
-        print(sw_char.to_dict())
         return sw_char
     else:
         res = r.get(f'https://swapi.dev/api/people/{id}')
@@ -70,36 +56,14 @@ def get_sw_char(id):
             char_desc = f"{data['name']}, standing at {h}ft and weighing {w}lbs.  Born {data['birth_year']}, {first_name(data['name'])} is of an unknown species."
         sw_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         sw_char.saveChar()
-
-        print(sw_char.to_dict())
         return sw_char
         
-
-def get_sw_loc(id):
-    if id == 0:
-        id = randint(1, 60)
-    print(f'location--{id}')
-    res = r.get(f'https://swapi.dev/api/planets/{id}')
-    data = res.json()
-    loc = {}
-    loc['id'] = 'sw' + id
-    loc['uni'] = "Star Wars"
-    loc['name'] = data['name']
-    if data['diameter'] != 'unknown':
-        dia = str(int(float(data['diameter'])*.621371))
-    else:
-        dia = 'unknown'
-    loc['desc'] = f"A {data['terrain']} planet with {data['rotation_period']} hours in the day and {data['orbital_period']} days in a year.  {dia} Miles in diameter with a population of {data['population']}."
-    loc['resident_ids'] = ' '.join([r[29:].rstrip("/") for r in data['residents'] if data['residents']])
-
-    print(loc)
     
 def get_rm_char(id):
     if id == 0:
         id = randint(1, 827)
     rm_char = Character.query.get(f"rm{id}")
     if rm_char:
-        print(rm_char.to_dict())
         return rm_char
     else:
         res = r.get(f'https://rickandmortyapi.com/api/character/{id}')
@@ -113,28 +77,13 @@ def get_rm_char(id):
         rm_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         rm_char.saveChar()
 
-        print(rm_char.to_dict())
         return rm_char
-
-def get_rm_loc(id):
-    if id == 0:
-        id = randint(1, 127)
-    res = r.get(f'https://rickandmortyapi.com/api/location/{id}')
-    data = res.json()
-    loc = {}
-    loc['id'] = 'rm' + id
-    loc['uni'] = "Rick and Morty"
-    loc['name'] = data['name']
-    loc['desc'] = f"A {data['type']} in {data['dimension']}"
-    loc['resident_ids'] = ' '.join([r[42:].rstrip("/") for r in data['residents'] if data['residents']])
-    print(loc)
 
 def get_poke_char(id):
     if id == 0:
         id = randint(1, 999)
     poke_char = Character.query.get(f"poke{id}")
     if poke_char:
-        print(poke_char.to_dict())
         return poke_char
     else:
         res = r.get(f'https://pokeapi.co/api/v2/pokemon/{id}')
@@ -156,18 +105,13 @@ def get_poke_char(id):
         poke_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         poke_char.saveChar()
 
-        print(poke_char.to_dict())
         return poke_char
     
-
-# NEW ADDS
-
 def get_dis_char(id):
     if id == 0:
         id = randint(1, 7250)
     dis_char = Character.query.get(f"dis{id}")
     if dis_char:
-        print(dis_char.to_dict())
         return dis_char
     res = r.get(f'https://api.disneyapi.dev/character/{id}')
     data = res.json()
@@ -190,7 +134,6 @@ def get_dis_char(id):
     dis_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
     dis_char.saveChar()
 
-    print(dis_char.to_dict())
     return dis_char
 
 def get_got_char(id):
@@ -198,7 +141,6 @@ def get_got_char(id):
         id = randint(1, 53)
     got_char = Character.query.get(f"got{id}")
     if got_char:
-        print(got_char.to_dict())
         return got_char
     res = r.get(f'https://thronesapi.com/api/v2/Characters/{id}')
     data = res.json()
@@ -211,5 +153,60 @@ def get_got_char(id):
     got_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
     got_char.saveChar()
 
-    print(got_char.to_dict())
     return got_char
+
+
+def help_get_sw_res(st):
+    if not st:
+        return 'None'
+    ret = ''.join([get_sw_char(int(s)).full_name + ' | ' for s in st.split()])[:-3]
+    return ret
+    
+def get_sw_loc(id):
+    if id == 0:
+        id = randint(1, 60)
+    sw_loc = Location.query.get(f"sw{id}")
+    if sw_loc:
+        return sw_loc
+    res = r.get(f'https://swapi.dev/api/planets/{id}')
+    data = res.json()
+    loc_id = 'sw' + str(id)
+    loc_uni = "Star Wars"
+    loc_name = data['name']
+    if data['diameter'] != 'unknown':
+        dia = str(int(float(data['diameter'])*.621371))
+    else:
+        dia = 'unknown'
+    loc_desc = f"A {data['terrain']} planet with {data['rotation_period']} hours in the day and {data['orbital_period']} days in a year.  {dia} Miles in diameter with a population of {data['population']}."
+    resident_ids = ' '.join([r[29:].rstrip("/") for r in data['residents'] if data['residents']])
+    loc_residents = help_get_sw_res(resident_ids)
+    sw_loc = Location(loc_id, loc_uni, loc_name, loc_desc, loc_residents)
+    sw_loc.saveLoc()
+    print(sw_loc.to_dict())
+    return sw_loc
+
+
+def help_get_rm_res(st):
+    if not st:
+        return 'None'
+    ret = ''.join([get_rm_char(int(s)).full_name + ' | ' for s in st.split()])[:-3]
+    return ret    
+
+def get_rm_loc(id):
+    if id == 0:
+        id = randint(1, 127)
+    rm_loc = Location.query.get(f"rm{id}")
+    if rm_loc:
+        return rm_loc
+    res = r.get(f'https://rickandmortyapi.com/api/location/{id}')
+    data = res.json()
+    loc_id = 'rm' + str(id)
+    loc_uni = "Rick and Morty"
+    loc_name = data['name']
+    loc_desc = f"A {data['type']} in {data['dimension']}"
+    resident_ids = ' '.join([r[42:].rstrip("/") for r in data['residents'] if data['residents']])
+    loc_residents = help_get_rm_res(resident_ids)
+    rm_loc = Location(loc_id, loc_uni, loc_name, loc_desc, loc_residents)
+    rm_loc.saveLoc()
+    print(rm_loc.to_dict())
+    return rm_loc
