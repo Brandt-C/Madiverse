@@ -46,7 +46,7 @@ def get_sw_char(id):
     res = r.get(f'https://swapi.dev/api/people/{id}')
     data = res.json()
     char = {}
-    char['id'] = id
+    char['id'] = 'sw' + id
     char['uni'] = 'Star Wars'
     char['first_name'] = first_name(data['name'])
     char['full_name'] = data['name']
@@ -74,7 +74,7 @@ def get_sw_loc(id):
     res = r.get(f'https://swapi.dev/api/planets/{id}')
     data = res.json()
     loc = {}
-    loc['id'] = id
+    loc['id'] = 'sw' + id
     loc['uni'] = "Star Wars"
     loc['name'] = data['name']
     if data['diameter'] != 'unknown':
@@ -92,7 +92,7 @@ def get_rm_char(id):
     res = r.get(f'https://rickandmortyapi.com/api/character/{id}')
     data = res.json()
     char = {}
-    char['id'] = id
+    char['id'] = 'rm' + id
     char['uni'] = 'Rick and Morty'
     char['first_name'] = first_name(data['name'])
     char['full_name'] = data['name']
@@ -107,7 +107,7 @@ def get_rm_loc(id):
     res = r.get(f'https://rickandmortyapi.com/api/location/{id}')
     data = res.json()
     loc = {}
-    loc['id'] = id
+    loc['id'] = 'rm' + id
     loc['uni'] = "Rick and Morty"
     loc['name'] = data['name']
     loc['desc'] = f"A {data['type']} in {data['dimension']}"
@@ -120,7 +120,7 @@ def get_poke_char(id):
     res = r.get(f'https://pokeapi.co/api/v2/pokemon/{id}')
     data = res.json()
     char = {}
-    char['id'] = id
+    char['id'] = 'poke' + id
     char['uni'] = 'Pokemon'
     char['first_name'] = data['name'].title()
     char['full_name'] = data['name'].title()
@@ -145,7 +145,7 @@ def get_dis_char(id):
     res = r.get(f'https://api.disneyapi.dev/character/{id}')
     data = res.json()
     char = {}
-    char['id'] = id
+    char['id'] = 'dis' + id
     char['uni'] = 'Disney'
     char['first_name'] = first_name(data['data']['name'])
     char['full_name'] = data['data']['name']
@@ -169,7 +169,7 @@ def get_got_char(id):
     res = r.get(f'https://thronesapi.com/api/v2/Characters/{id}')
     data = res.json()
     char = {}
-    char['id'] = id
+    char['id'] = 'got' + id
     char['uni'] = 'Game Of Thrones'
     char['first_name'] = data['firstName']
     char['full_name'] = data['fullName']
