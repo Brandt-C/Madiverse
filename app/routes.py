@@ -28,6 +28,6 @@ def test():
 @app.route('/testing')
 def test2():
     print(' Char')
-    get_sw_loc(0)
+    get_got_char(0)
     print('\n')
     return render_template('land.html')

@@ -32,3 +32,13 @@ class Character(db.Model):
     def saveChar(self):
         db.session.add(self)
         db.session.commit()
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'first_name' : self.first_name,
+            'full_name' : self.full_name,
+            'desc' : self.desc,
+            'img' : self.img,
+            'uni' : self.uni
+        }
