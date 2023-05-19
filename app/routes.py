@@ -27,5 +27,5 @@ def test():
 
 @app.route('/testing')
 def test2():
-    get_sw_loc(0)
+    print(get_story_deets(get_story(0)))
     return render_template('land.html')

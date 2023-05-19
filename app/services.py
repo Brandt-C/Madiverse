@@ -1,6 +1,6 @@
 import requests as r
 from random import randint
-from .models import Character, Location
+from .models import Character, Location, RawStory
 
 def first_name(st):
     fn = ''
@@ -33,6 +33,7 @@ def get_sw_char(id):
         id = randint(1, 83)
     sw_char = Character.query.get(f"sw{id}")
     if sw_char:
+        print(sw_char.to_dict())
         return sw_char
     else:
         res = r.get(f'https://swapi.dev/api/people/{id}')
@@ -42,8 +43,11 @@ def get_sw_char(id):
         char_first_name = first_name(data['name'])
         char_full_name = data['name']
         char_img = f'https://starwars-visualguide.com/#/characters/{id}'
-        cen = int(data['height'])*.0328084
-        h = str(round(cen, 2))
+        if data['height'] != 'unknown':
+            cen = int(data['height'])*.0328084
+            h = str(round(cen, 2))
+        else:
+            h = 'unknown'
         if data['mass'] != 'unknown':
             w = str(int(float(data['mass'])*2.20462))
         else:
@@ -56,6 +60,7 @@ def get_sw_char(id):
             char_desc = f"{data['name']}, standing at {h}ft and weighing {w}lbs.  Born {data['birth_year']}, {first_name(data['name'])} is of an unknown species."
         sw_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         sw_char.saveChar()
+        print(sw_char.to_dict())
         return sw_char
         
     
@@ -210,3 +215,32 @@ def get_rm_loc(id):
     rm_loc.saveLoc()
     print(rm_loc.to_dict())
     return rm_loc
+
+def get_story(id):
+    if id == 0:
+        id = randint(1, 5)
+    story = RawStory.query.get(id)
+
+    return story.rstring
+
+def get_story_deets(st):
+    key = {}
+    l= 0
+    r = None
+    while l < len(st):
+        if st[l] == '{':
+            if not r:
+                r = l + 1
+        if st[l] == '{' and st[r] != '}':
+            r += 1
+        elif st[l] == '{' and st[r] == '}':
+            x = st[l+2:r-1]
+            if x not in key:
+                key[x] = 1
+            else:
+                key[x] +=1
+            l = r + 1
+            r = None
+        else:
+            l +=1
+    return key
