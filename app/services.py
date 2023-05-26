@@ -221,20 +221,21 @@ def get_story(id):
         id = randint(1, 5)
     story = RawStory.query.get(id)
 
-    return story.rstring
+    return story.rstring, story.id
 
 def get_story_deets(st):
+    s = st[0]
     key = {}
     l= 0
     r = None
-    while l < len(st):
-        if st[l] == '{':
+    while l < len(s):
+        if s[l] == '{':
             if not r:
                 r = l + 1
-        if st[l] == '{' and st[r] != '}':
+        if s[l] == '{' and s[r] != '}':
             r += 1
-        elif st[l] == '{' and st[r] == '}':
-            x = st[l+2:r-1]
+        elif s[l] == '{' and s[r] == '}':
+            x = s[l+2:r-1]
             if x not in key:
                 key[x] = 1
             else:
@@ -243,4 +244,13 @@ def get_story_deets(st):
             r = None
         else:
             l +=1
-    return key
+    c = 0
+    l = 0
+    for x in key:
+        if x[0] == 'C':
+            c += 1
+        elif x[0] == 'L':
+            l += 1
+    key['chars'] = c
+    key['locs'] = l
+    return key, st[1]

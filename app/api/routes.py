@@ -17,8 +17,10 @@ def add_story():
 
 @api.get('/story/rando')
 def get_rando_deets():
+
     rando = get_story_deets(get_story(0))
     return {
         'status' : 'ok',
-        'data' : rando
+        'data' : rando[0],
+        'sid' : rando[1]
     }
