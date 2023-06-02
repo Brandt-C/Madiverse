@@ -253,4 +253,5 @@ def get_story_deets(st):
             l += 1
     key['chars'] = c
     key['locs'] = l
+    # key['text'] = s
     return key, st[1]
