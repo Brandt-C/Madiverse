@@ -1,5 +1,5 @@
 import requests as r
-from random import randint
+from random import randint, choice
 from .models import Character, Location, RawStory
 
 def first_name(st):
@@ -257,6 +257,60 @@ def get_story_deets(st):
     return key, st[1]
 
 def story_setup(dic):
-    pass
+    story = {
+        'chars': [],
+        'locs' : [],
+        'text' : ''
+    }
+    # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
+    def char_case(st):
+        match st:
+            case 'got':
+                return get_got_char()
+            case 'rm':
+                return get_rm_char()
+            case 'dis':
+                return get_dis_char()
+            case 'sw':
+                return get_sw_char()
+            case 'pok':
+                return get_poke_char()
+            case _:
+                c_list = ['got', 'rm', 'sw', 'dis', 'pok']
+                return char_case(choice(c_list))
+    def loc_case(st):
+        match st:
+            case 'rm':
+                return get_rm_loc()
+            case 'sw':
+                return get_sw_loc()
+            case _:
+                return loc_case(choice(['rm', 'sw']))            
+    for c in dic['c']:
+        story['chars'].append(char_case(c))
+    for l in dic['l']:
+        story['locs'].append(loc_case(l))
+
+    def write_story(st):
+        s = st[0]
+        key = {}
+        l= 0
+        r = None
+        while l < len(s):
+            if s[l] == '{':
+                if not r:
+                    r = l + 1
+            if s[l] == '{' and s[r] != '}':
+                r += 1
+            elif s[l] == '{' and s[r] == '}':
+                x = s[l+2:r-1]
+                if x not in key:
+                    key[x] = 1
+                else:
+                    key[x] +=1
+                l = r + 1
+                r = None
+            else:
+                l +=1
 
 # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
