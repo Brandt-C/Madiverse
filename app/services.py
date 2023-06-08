@@ -266,24 +266,24 @@ def story_setup(dic):
     def char_case(st):
         match st:
             case 'got':
-                return get_got_char()
+                return get_got_char(0)
             case 'rm':
-                return get_rm_char()
+                return get_rm_char(0)
             case 'dis':
-                return get_dis_char()
+                return get_dis_char(0)
             case 'sw':
-                return get_sw_char()
+                return get_sw_char(0)
             case 'pok':
-                return get_poke_char()
+                return get_poke_char(0)
             case _:
                 c_list = ['got', 'rm', 'sw', 'dis', 'pok']
                 return char_case(choice(c_list))
     def loc_case(st):
         match st:
             case 'rm':
-                return get_rm_loc()
+                return get_rm_loc(0)
             case 'sw':
-                return get_sw_loc()
+                return get_sw_loc(0)
             case _:
                 return loc_case(choice(['rm', 'sw']))            
     for c in dic['c']:
@@ -292,25 +292,14 @@ def story_setup(dic):
         story['locs'].append(loc_case(l))
 
     def write_story(st):
-        s = st[0]
-        key = {}
-        l= 0
-        r = None
-        while l < len(s):
-            if s[l] == '{':
-                if not r:
-                    r = l + 1
-            if s[l] == '{' and s[r] != '}':
-                r += 1
-            elif s[l] == '{' and s[r] == '}':
-                x = s[l+2:r-1]
-                if x not in key:
-                    key[x] = 1
-                else:
-                    key[x] +=1
-                l = r + 1
-                r = None
-            else:
-                l +=1
-
+        for i in range(len(story['chars'])):
+            st = st.replace('{ Char' + str(i+1) + ' }', story['chars'][i].desc, 1)
+            st = st.replace('{ Char' + str(i+1) + ' }', story['chars'][i].desc)
+        for i in range(len(story['locs'])):
+            st = st.replace('{ Loc' + str(i+1) + ' }', story['locs'][i].name + story['locs'][i].desc, 1)
+            st = st.replace('{ Loc' + str(i+1) + ' }', story['locs'][i].name)
+        return st
+    raw = RawStory.query.get(dic['sid'])
+    story['text'] = write_story(raw.rstring)
+    return story
 # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}

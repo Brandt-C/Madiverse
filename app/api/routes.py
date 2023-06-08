@@ -29,6 +29,8 @@ def get_rando_deets():
 def send_story_package():
     data = request.json
     print(data)
+    ob = story_setup(data)
+    print(ob)
     return {
         'status' : 'ok',
         'message' : 'data has been received!'
