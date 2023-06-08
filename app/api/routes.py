@@ -24,3 +24,19 @@ def get_rando_deets():
         'data' : rando[0],
         'sid' : rando[1]
     }
+
+@api.post('/getstory')
+def send_story_package():
+    data = request.json
+    print(data)
+    return {
+        'status' : 'ok',
+        'message' : 'data has been received!'
+    }
+
+
+# story_setup = {
+#     'c' : [],
+#     'l' : [],
+#     'sid' : None
+# }

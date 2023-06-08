@@ -220,8 +220,8 @@ def get_story(id):
     if id == 0:
         id = randint(1, 5)
     story = RawStory.query.get(id)
-
     return story.rstring, story.id
+
 
 def get_story_deets(st):
     s = st[0]
@@ -255,3 +255,8 @@ def get_story_deets(st):
     key['locs'] = l
     # key['text'] = s
     return key, st[1]
+
+def story_setup(dic):
+    pass
+
+# {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
