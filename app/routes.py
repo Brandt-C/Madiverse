@@ -29,3 +29,8 @@ def test():
 def test2():
     print(get_story_deets(get_story(0)))
     return render_template('land.html')
+
+@app.route('/testing/rando')
+def test3():
+    print()
+    return render_template('land.html')

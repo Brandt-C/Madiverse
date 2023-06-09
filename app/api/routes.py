@@ -28,12 +28,13 @@ def get_rando_deets():
 def send_story_package():
     data = request.json
     print(data)
-    x = story_setup(data)
-    print(x)
+    # x = story_setup(data)
+    y = writter(data)
+    print('\nwritter:\n', y)
     return {
         'status' : 'ok',
         'message' : 'data has been received!',
-        'text': x
+        'text': y
     }
 
 @api.get('/char/rando/<uni_st>')

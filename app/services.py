@@ -259,66 +259,97 @@ def get_story_deets(st):
     return key, st[1]
 
 def story_setup(dic):
-    story = {
-        'chars': [],
-        'locs' : [],
-    }
     text = {}
     # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
-    def char_case(st):
-        match st:
-            case 'got':
-                return get_got_char(0)
-            case 'rm':
-                return get_rm_char(0)
-            case 'dis':
-                return get_dis_char(0)
-            case 'sw':
-                return get_sw_char(0)
-            case 'pok':
-                return get_poke_char(0)
-            case _:
-                c_list = ['got', 'rm', 'sw', 'dis', 'pok']
-                return char_case(choice(c_list))
-    def loc_case(st):
-        match st:
-            case 'rm':
-                return get_rm_loc(0)
-            case 'sw':
-                return get_sw_loc(0)
-            case _:
-                return loc_case(choice(['rm', 'sw']))            
-    for c in dic['c']:
-        story['chars'].append(char_case(c))
-    for l in dic['l']:
-        story['locs'].append(loc_case(l))
-
     def write_story(st):
-        for i in range(len(story['chars'])):
-            st = st.replace('{ Char' + str(i+1) + ' }', story['chars'][i].desc, 1)
-            st = st.replace('{ Char' + str(i+1) + ' }', story['chars'][i].desc)
-        for i in range(len(story['locs'])):
-            st = st.replace('{ Loc' + str(i+1) + ' }', story['locs'][i].name + story['locs'][i].desc, 1)
-            st = st.replace('{ Loc' + str(i+1) + ' }', story['locs'][i].name)
+        for i in range(len(dic['c'])):
+            st = st.replace('{ Char' + str(i+1) + ' }', dic['c'][i].desc, 1)
+        
+            st = st.replace('{ Char' + str(i+1) + ' }', dic['c'][i].desc)
+        for i in range(len(dic['locs'])):
+            st = st.replace('{ Loc' + str(i+1) + ' }', dic['locs'][i].name + dic['locs'][i].desc, 1)
+            st = st.replace('{ Loc' + str(i+1) + ' }', dic['locs'][i].name)
         return st
     raw = RawStory.query.get(dic['sid'])
     text['text'] = write_story(raw.rstring)
     return text
 # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
+{'c': [
+    {
+        'desc': 'Taun We, standing at 6.99ft and weighing unknownlbs.  Born unknown, Taun is a Kaminoan known to speak Kaminoan.  Type: amphibian. Lifespan: 80 years.',
+        'first_name': 'Taun',
+        'full_name': 'Taun We', 
+        'id': 'sw73', 
+        'img': 'https://starwars-visualguide.com/#/characters/73', 
+        'uni': 'Star Wars'
+        }, 
+    {
+        'desc': 'Priest Witherspoon a Male  type of Human from Earth (Replacement Dimension), recently found: Earth (Replacement Dimension).', 
+        'first_name': 'Priest', 
+        'full_name': 'Priest Witherspoon', 
+        'id': 'rm538', 
+        'img': 'https://rickandmortyapi.com/api/character/avatar/538.jpeg', 
+        'uni': 'Rick and Morty'}, 
+        {'desc': "Psyduck- 'While lulling its enemies with its vacant look, this wily POKéMON will use psychokinetic powers.'.", 'first_name': 'Psyduck', 'full_name': 'Psyduck', 'id': 'poke54', 'img': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/54.svg', 'uni': 'Pokemon'}
+        ], 
+'l': [{'desc': 'A Planet in Dimension D716', 'id': 'rm59', 'name': 'Earth (D716)', 'residents': 'None', 'uni': 'Rick and Morty'}], 
+'sid': 2}
+
+def writter(dic):
+    raw = RawStory.query.get(dic['sid'])
+    s = raw.rstring
+    lis = []
+    l= 0
+    r = None
+    while l < len(s):
+        if s[l] == '{':
+            if not r:
+                r = l + 1
+        if s[l] == '{' and s[r] != '}':
+            r += 1
+        elif s[l] == '{' and s[r] == '}':
+            #x = s[l+2:r-1]  # Char1   or Loc1
+            if s[l+2] == 'C':
+                x = dic['c'][int(s[r-2])-1]['first_name']
+            elif s[l+2] == "L":
+                x = dic['l'][int(s[r-2])-1]['name']
+            lis.append(s[:l])
+            lis.append(x)
+            s = s[r+1:]
+            l = 0
+            r = None
+        else:
+            l +=1
+    lis.append(s)
+    for char in dic['c']:
+        for i in range(len(lis)):
+            if lis[i] == char['first_name']:
+                z = f" (--info: {char['desc']} From {char['uni']})"
+                lis.insert(i+1, z)
+                break
+    for loc in dic['l']:
+        for i in range(len(lis)):
+            if lis[i] == loc['name']:
+                z = f"(--info:{loc['name']}, {loc['desc']}.  Residents: {loc['residents']}. From {loc['uni']})"
+                lis.insert(i+1, z)
+                break
+    return ''.join(lis)
+
+
+
+
 def char_case(st):
     match st:
         case 'got':
             return get_got_char(0).to_dict()
         case 'rm':
             return get_rm_char(0).to_dict()
-        case 'dis':
-            return get_dis_char(0).to_dict()
         case 'sw':
             return get_sw_char(0).to_dict()
         case 'pok':
             return get_poke_char(0).to_dict()
         case _:
-            c_list = ['got', 'rm', 'sw', 'dis', 'pok']
+            c_list = ['got', 'rm', 'sw', 'pok']
             return char_case(choice(c_list))
 def loc_case(st):
     match st:
