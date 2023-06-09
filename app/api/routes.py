@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from ..services import *
 from ..models import RawStory
 
@@ -17,7 +17,6 @@ def add_story():
 
 @api.get('/story/rando')
 def get_rando_deets():
-
     rando = get_story_deets(get_story(0))
     return {
         'status' : 'ok',
@@ -29,13 +28,29 @@ def get_rando_deets():
 def send_story_package():
     data = request.json
     print(data)
-    ob = story_setup(data)
-    print(ob)
+    x = story_setup(data)
+    print(x)
     return {
         'status' : 'ok',
-        'message' : 'data has been received!'
+        'message' : 'data has been received!',
+        'text': x
     }
 
+@api.get('/char/rando/<uni_st>')
+def get_rando_char(uni_st):
+    x = char_case(uni_st)
+    return {
+    'status' : 'ok',
+    'data' : x
+    }
+
+@api.get('/loc/rando/<uni_st>')
+def get_rando_loc(uni_st):
+    x = loc_case(uni_st)
+    return {
+    'status' : 'ok',
+    'data' : x
+    }
 
 # story_setup = {
 #     'c' : [],

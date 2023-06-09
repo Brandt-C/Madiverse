@@ -49,6 +49,8 @@ def get_sw_char(id):
         else:
             h = 'unknown'
         if data['mass'] != 'unknown':
+            print(f"ID is- {id}")
+            print(data['mass'], type(data['mass']))
             w = str(int(float(data['mass'])*2.20462))
         else:
             w = 'unknown'
@@ -260,8 +262,8 @@ def story_setup(dic):
     story = {
         'chars': [],
         'locs' : [],
-        'text' : ''
     }
+    text = {}
     # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
     def char_case(st):
         match st:
@@ -300,6 +302,29 @@ def story_setup(dic):
             st = st.replace('{ Loc' + str(i+1) + ' }', story['locs'][i].name)
         return st
     raw = RawStory.query.get(dic['sid'])
-    story['text'] = write_story(raw.rstring)
-    return story
+    text['text'] = write_story(raw.rstring)
+    return text
 # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
+def char_case(st):
+    match st:
+        case 'got':
+            return get_got_char(0).to_dict()
+        case 'rm':
+            return get_rm_char(0).to_dict()
+        case 'dis':
+            return get_dis_char(0).to_dict()
+        case 'sw':
+            return get_sw_char(0).to_dict()
+        case 'pok':
+            return get_poke_char(0).to_dict()
+        case _:
+            c_list = ['got', 'rm', 'sw', 'dis', 'pok']
+            return char_case(choice(c_list))
+def loc_case(st):
+    match st:
+        case 'rm':
+            return get_rm_loc(0).to_dict()
+        case 'sw':
+            return get_sw_loc(0).to_dict()
+        case _:
+            return loc_case(choice(['rm', 'sw']))  
