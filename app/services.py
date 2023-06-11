@@ -333,7 +333,8 @@ def writter(dic):
                 z = f"(--info:{loc['name']}, {loc['desc']}.  Residents: {loc['residents']}. From {loc['uni']})"
                 lis.insert(i+1, z)
                 break
-    return ''.join(lis)
+    first =  ''.join(lis)
+    return first.split('\\n')
 
 
 
