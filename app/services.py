@@ -107,7 +107,13 @@ def get_poke_char(id):
             char_img = data['sprites']['front_shiny']
         res2 = r.get(f'https://pokeapi.co/api/v2/pokemon-species/{id}')
         d2 = res2.json()
-        des = strip_escape_chars(d2['flavor_text_entries'][0]['flavor_text'])
+        d3 = d2['flavor_text_entries']
+        for x in range(len(d3)):
+            if d3[x]['language']['name'] == 'en':
+                des = strip_escape_chars(d3[x]['flavor_text'])
+                break
+        if not des:
+            des = 'None'
         char_desc = f"{data['name'].title()}- {des}."
         poke_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         poke_char.saveChar()
@@ -274,26 +280,26 @@ def story_setup(dic):
     text['text'] = write_story(raw.rstring)
     return text
 # {'c': ['dis', 'rm'], 'l': ['rm'], 'sid': 4}
-{'c': [
-    {
-        'desc': 'Taun We, standing at 6.99ft and weighing unknownlbs.  Born unknown, Taun is a Kaminoan known to speak Kaminoan.  Type: amphibian. Lifespan: 80 years.',
-        'first_name': 'Taun',
-        'full_name': 'Taun We', 
-        'id': 'sw73', 
-        'img': 'https://starwars-visualguide.com/#/characters/73', 
-        'uni': 'Star Wars'
-        }, 
-    {
-        'desc': 'Priest Witherspoon a Male  type of Human from Earth (Replacement Dimension), recently found: Earth (Replacement Dimension).', 
-        'first_name': 'Priest', 
-        'full_name': 'Priest Witherspoon', 
-        'id': 'rm538', 
-        'img': 'https://rickandmortyapi.com/api/character/avatar/538.jpeg', 
-        'uni': 'Rick and Morty'}, 
-        {'desc': "Psyduck- 'While lulling its enemies with its vacant look, this wily POKéMON will use psychokinetic powers.'.", 'first_name': 'Psyduck', 'full_name': 'Psyduck', 'id': 'poke54', 'img': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/54.svg', 'uni': 'Pokemon'}
-        ], 
-'l': [{'desc': 'A Planet in Dimension D716', 'id': 'rm59', 'name': 'Earth (D716)', 'residents': 'None', 'uni': 'Rick and Morty'}], 
-'sid': 2}
+# {'c': [
+#     {
+#         'desc': 'Taun We, standing at 6.99ft and weighing unknownlbs.  Born unknown, Taun is a Kaminoan known to speak Kaminoan.  Type: amphibian. Lifespan: 80 years.',
+#         'first_name': 'Taun',
+#         'full_name': 'Taun We', 
+#         'id': 'sw73', 
+#         'img': 'https://starwars-visualguide.com/#/characters/73', 
+#         'uni': 'Star Wars'
+#         }, 
+#     {
+#         'desc': 'Priest Witherspoon a Male  type of Human from Earth (Replacement Dimension), recently found: Earth (Replacement Dimension).', 
+#         'first_name': 'Priest', 
+#         'full_name': 'Priest Witherspoon', 
+#         'id': 'rm538', 
+#         'img': 'https://rickandmortyapi.com/api/character/avatar/538.jpeg', 
+#         'uni': 'Rick and Morty'}, 
+#         {'desc': "Psyduck- 'While lulling its enemies with its vacant look, this wily POKéMON will use psychokinetic powers.'.", 'first_name': 'Psyduck', 'full_name': 'Psyduck', 'id': 'poke54', 'img': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/54.svg', 'uni': 'Pokemon'}
+#         ], 
+# 'l': [{'desc': 'A Planet in Dimension D716', 'id': 'rm59', 'name': 'Earth (D716)', 'residents': 'None', 'uni': 'Rick and Morty'}], 
+# 'sid': 2}
 
 def writter(dic):
     raw = RawStory.query.get(dic['sid'])
@@ -335,8 +341,6 @@ def writter(dic):
                 break
     first =  ''.join(lis)
     return first.split('\\n')
-
-
 
 
 def char_case(st):
