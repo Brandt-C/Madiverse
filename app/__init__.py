@@ -7,7 +7,7 @@ from .api.routes import api
 from .models import db
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins='https://behind-the-madiverse.onrender.com')
 
 app.config.from_object(Config)
 
