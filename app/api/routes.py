@@ -33,10 +33,10 @@ def get_rando_deets():
 @api.post('/getstory')
 def send_story_package():
     data = request.json
-    print(data)
+    # print(data)
     # x = story_setup(data)
     y = writter(data)
-    print('\nwritter:\n', y)
+    # print('\nwritter:\n', y)
     return {
         'status' : 'ok',
         'message' : 'data has been received!',

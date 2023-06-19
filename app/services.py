@@ -33,7 +33,7 @@ def get_sw_char(id):
         id = randint(1, 83)
     sw_char = Character.query.get(f"sw{id}")
     if sw_char:
-        print(sw_char.to_dict())
+        # print(sw_char.to_dict())
         return sw_char
     else:
         res = r.get(f'https://swapi.dev/api/people/{id}')
@@ -49,8 +49,8 @@ def get_sw_char(id):
         else:
             h = 'unknown'
         if data['mass'] != 'unknown':
-            print(f"ID is- {id}")
-            print(data['mass'], type(data['mass']))
+            # print(f"ID is- {id}")
+            # print(data['mass'], type(data['mass']))
             w = str(int(float(data['mass'])*2.20462))
         else:
             w = 'unknown'
@@ -62,7 +62,7 @@ def get_sw_char(id):
             char_desc = f"{data['name']}, standing at {h}ft and weighing {w}lbs.  Born {data['birth_year']}, {first_name(data['name'])} is of an unknown species."
         sw_char = Character(char_id, char_full_name, char_desc, char_img, char_first_name, char_uni)
         sw_char.saveChar()
-        print(sw_char.to_dict())
+        # print(sw_char.to_dict())
         return sw_char
         
     
@@ -195,7 +195,7 @@ def get_sw_loc(id):
     loc_residents = help_get_sw_res(resident_ids)
     sw_loc = Location(loc_id, loc_uni, loc_name, loc_desc, loc_residents)
     sw_loc.saveLoc()
-    print(sw_loc.to_dict())
+    # print(sw_loc.to_dict())
     return sw_loc
 
 
@@ -221,7 +221,7 @@ def get_rm_loc(id):
     loc_residents = help_get_rm_res(resident_ids)
     rm_loc = Location(loc_id, loc_uni, loc_name, loc_desc, loc_residents)
     rm_loc.saveLoc()
-    print(rm_loc.to_dict())
+    # print(rm_loc.to_dict())
     return rm_loc
 
 def get_story(id):
